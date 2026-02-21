@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certstore-backend
+  namespace: karpatilabor
+  labels:
+    app: certstore-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: certstore-backend
+  template:
+    metadata:
+      labels:
+        app: certstore-backend
+    spec:
+      containers:
+      - name: backend
+        image: ghcr.io/zolmen/gde-alkfet/backend:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ConnectionStrings__MongoDB
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: connection-string
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: certstore-backend
+  namespace: karpatilabor
+spec:
+  selector:
+    app: certstore-backend
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP

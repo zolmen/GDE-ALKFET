@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: certstore-ingress
+  namespace: karpatilabor
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - karpatilabor.com
+    - app.karpatilabor.com
+    secretName: certstore-tls
+  rules:
+  - host: karpatilabor.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: certstore-backend
+            port:
+              number: 80
+  - host: app.karpatilabor.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: certstore-backend
+            port:
+              number: 80
