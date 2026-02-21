@@ -64,3 +64,8 @@ SemanticSymbols.db*
 
 # Visual Studio IDE state
 .vs/
+
+# Node.js / Angular
+node_modules/
+dist/
+.angular/
