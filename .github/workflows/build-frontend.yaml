@@ -1,0 +1,28 @@
+name: Build and Push Frontend
+on:
+  push:
+    branches: [main]
+    paths: ['certstore-frontend/**', 'Dockerfile.frontend', 'nginx.frontend.conf']
+  workflow_dispatch:
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: zolmen/gde-alkfet/frontend
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: Dockerfile.frontend
+        push: true
+        tags: ghcr.io/zolmen/gde-alkfet/frontend:latest

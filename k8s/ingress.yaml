@@ -25,6 +25,13 @@ spec:
             name: certstore-backend
             port:
               number: 80
+      - path: /(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: certstore-frontend
+            port:
+              number: 80
   - host: app.karpatilabor.com
     http:
       paths:
@@ -33,5 +40,12 @@ spec:
         backend:
           service:
             name: certstore-backend
+            port:
+              number: 80
+      - path: /(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: certstore-frontend
             port:
               number: 80
