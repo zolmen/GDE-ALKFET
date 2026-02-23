@@ -1,0 +1,11 @@
+@if (messageService.messages.length > 0) {
+<div class="messages">
+    <h3>
+        Üzenetek
+        <button class="btn-secondary btn-sm" (click)="messageService.clear()">Törlés</button>
+    </h3>
+    @for (message of messageService.messages; track message) {
+    <div class="message">{{ message }}</div>
+    }
+</div>
+}
