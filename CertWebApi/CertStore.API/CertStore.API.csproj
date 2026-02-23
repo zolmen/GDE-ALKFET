@@ -10,6 +10,7 @@
     <PackageReference Include="MongoDB.Driver" Version="3.*" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.*" />
     <PackageReference Include="ModelContextProtocol.AspNetCore" Version="*-*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="*" />
   </ItemGroup>
 
   <ItemGroup>
