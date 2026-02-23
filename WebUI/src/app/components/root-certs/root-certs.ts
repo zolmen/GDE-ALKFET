@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, SlicePipe } from '@angular/common';
@@ -17,10 +17,12 @@ export class RootCertsComponent implements OnInit {
     rootCerts: RootCert[] = [];
     newSubjectName = '';
     newValidityDays = 3650;
+    isCreating = false;
 
     constructor(
         private certService: CertService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private cdr: ChangeDetectorRef
     ) { }
 
     ngOnInit(): void {
@@ -29,13 +31,22 @@ export class RootCertsComponent implements OnInit {
 
     loadRootCerts(): void {
         this.certService.getRootCerts().subscribe({
-            next: certs => this.rootCerts = certs,
-            error: err => this.messageService.add(err)
+            next: certs => {
+                this.rootCerts = certs;
+                this.cdr.detectChanges();
+            },
+            error: err => {
+                this.messageService.add(err);
+                this.cdr.detectChanges();
+            }
         });
     }
 
     createRootCert(): void {
-        if (!this.newSubjectName.trim()) return;
+        if (!this.newSubjectName.trim() || this.isCreating) return;
+
+        this.isCreating = true;
+        this.cdr.detectChanges();
 
         this.certService.createRootCert({
             subjectName: this.newSubjectName.trim(),
@@ -44,9 +55,14 @@ export class RootCertsComponent implements OnInit {
             next: () => {
                 this.newSubjectName = '';
                 this.newValidityDays = 3650;
+                this.isCreating = false;
                 this.loadRootCerts();
             },
-            error: err => this.messageService.add(err)
+            error: err => {
+                this.messageService.add(err);
+                this.isCreating = false;
+                this.cdr.detectChanges();
+            }
         });
     }
 

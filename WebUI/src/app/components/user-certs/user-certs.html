@@ -16,8 +16,8 @@
     </select>
     <input type="file" (change)="onCsrFileSelected($event)" accept=".pem,.csr" />
     <input type="number" placeholder="Érvényesség (nap)" [(ngModel)]="validityDays" />
-    <button class="btn-primary" (click)="signCert()" [disabled]="!selectedRootCertId || !csrBase64">
-        Aláírás
+    <button class="btn-primary" (click)="signCert()" [disabled]="!selectedRootCertId || !csrBase64 || isCreating">
+        {{ isCreating ? 'Aláírás folyamatban...' : 'Aláírás' }}
     </button>
 </div>
 
