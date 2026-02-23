@@ -1,0 +1,55 @@
+<h2>User Tanúsítványok</h2>
+
+@if (filterRootCertId) {
+<p class="filter-info">
+    Szűrés root tanúsítványra: <strong>{{ filterRootCertId }}</strong>
+    <a routerLink="/user-certs">Összes megjelenítése</a>
+</p>
+}
+
+<div class="form-group">
+    <select [(ngModel)]="selectedRootCertId">
+        <option value="">-- Válassz Root CA-t --</option>
+        @for (root of rootCerts; track root.id) {
+        <option [value]="root.id">{{ root.subjectName }}</option>
+        }
+    </select>
+    <input type="file" (change)="onCsrFileSelected($event)" accept=".pem,.csr" />
+    <input type="number" placeholder="Érvényesség (nap)" [(ngModel)]="validityDays" />
+    <button class="btn-primary" (click)="signCert()" [disabled]="!selectedRootCertId || !csrBase64">
+        Aláírás
+    </button>
+</div>
+
+@if (userCerts.length > 0) {
+<table>
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Thumbprint</th>
+            <th>Érvényes</th>
+            <th>Lejárat</th>
+            <th>Műveletek</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (cert of userCerts; track cert.id) {
+        <tr>
+            <td>
+                <a [routerLink]="['/cert-detail/user', cert.id]">{{ cert.subjectName }}</a>
+            </td>
+            <td class="mono">{{ cert.thumbprint | slice:0:16 }}...</td>
+            <td>{{ cert.notBefore | date:'yyyy-MM-dd' }}</td>
+            <td>{{ cert.notAfter | date:'yyyy-MM-dd' }}</td>
+            <td>
+                <button class="btn-danger" (click)="deleteUserCert(cert.id)">Törlés</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+} @else {
+<p class="empty-state">Nincs user tanúsítvány.</p>
+}
+
+<app-messages />
