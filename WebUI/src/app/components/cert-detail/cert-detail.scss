@@ -1,0 +1,49 @@
+.detail-card {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.detail-table {
+    box-shadow: none;
+    margin-bottom: 0;
+
+    th {
+        background: #f5f7fa;
+        color: #2c3e50;
+        text-transform: none;
+        font-size: 0.85rem;
+        width: 200px;
+        text-align: right;
+        padding-right: 1.5rem;
+    }
+
+    td {
+        font-size: 0.9rem;
+    }
+}
+
+.mono {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    word-break: break-all;
+}
+
+.loading {
+    text-align: center;
+    color: #7f8c8d;
+    padding: 2rem;
+    font-style: italic;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
