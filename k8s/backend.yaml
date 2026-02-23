@@ -26,6 +26,8 @@ spec:
             secretKeyRef:
               name: mongodb-secret
               key: connection-string
+        - name: MongoDb__Database
+          value: "CertStore"
         resources:
           requests:
             memory: "128Mi"
@@ -46,11 +48,3 @@ spec:
   - port: 80
     targetPort: 8080
   type: ClusterIP
-        env:
-        - name: MongoDb__ConnectionString
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret
-              key: connection-string
-        - name: MongoDb__Database
-          value: "CertStore"
