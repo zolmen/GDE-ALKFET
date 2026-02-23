@@ -61,8 +61,11 @@ SemanticSymbols.db*
 
 # VS http test files
 *.http
-CertWebApi/CertStore.API/.vs/CertStore.API/FileContentIndex/8dabf1c8-1c48-4eb7-a8c5-cc63dadef514.vsidx
-CertWebApi/CertStore.API/.vs/CertStore.API/v17/.futdcache.v2
-CertWebApi/CertStore.API/.vs/CertStore.API/v17/.suo
-CertWebApi/CertStore.API/.vs/CertStore.API/FileContentIndex/2c456e65-51d5-4726-92dc-68747462622e.vsidx
-CertWebApi/CertStore.API/.vs/CertStore.API/v18/.suo
+
+# Visual Studio IDE state
+.vs/
+
+# Node.js / Angular
+node_modules/
+dist/
+.angular/
