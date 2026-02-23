@@ -21,7 +21,7 @@ spec:
         ports:
         - containerPort: 8080
         env:
-        - name: ConnectionStrings__MongoDB
+        - name: MongoDb__ConnectionString
           valueFrom:
             secretKeyRef:
               name: mongodb-secret
