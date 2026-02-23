@@ -2,7 +2,7 @@ name: Build and Push Frontend
 on:
   push:
     branches: [main]
-    paths: ['certstore-frontend/**', 'Dockerfile.frontend', 'nginx.frontend.conf']
+    paths: ['WebUI/**', 'Dockerfile.frontend']
   workflow_dispatch:
 env:
   REGISTRY: ghcr.io
@@ -25,4 +25,6 @@ jobs:
         context: .
         file: Dockerfile.frontend
         push: true
-        tags: ghcr.io/zolmen/gde-alkfet/frontend:latest
+        tags: |
+          ghcr.io/zolmen/gde-alkfet/frontend:latest
+          ghcr.io/zolmen/gde-alkfet/frontend:${{ github.sha }}
