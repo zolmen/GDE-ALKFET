@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="CertStore.API/CertStore.API.csproj" />
+  <Project Path="CertStore.Domain/CertStore.Domain.csproj" />
+  <Project Path="CertStore.Infrastructure/CertStore.Infrastructure.csproj" />
+</Solution>
