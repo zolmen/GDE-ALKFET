@@ -4,7 +4,7 @@ $primary: #2c3e50;
 $primary-light: #3498db;
 $danger: #e74c3c;
 $success: #27ae60;
-$bg: #f5f7fa;
+$bg: #ff69b4; // Erősebb rózsaszín (Hot Pink)
 $text: #2c3e50;
 $text-light: #7f8c8d;
 $border: #dcdfe6;
@@ -48,10 +48,13 @@ h2 {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: $radius;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
   margin-bottom: 1.5rem;
 }
 
@@ -126,17 +129,19 @@ input[type='text'],
 input[type='number'],
 input[type='file'],
 select {
-  border: 1px solid $border;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: $radius;
   padding: 0.5rem 0.75rem;
   font-size: 0.9rem;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.3s ease;
 
   &:focus {
-    border-color: $primary-light;
-    box-shadow: 0 0 0 2px rgba($primary-light, 0.15);
+    border-color: #8e44ad;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.2);
   }
 }
 
@@ -147,9 +152,12 @@ select {
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: $radius;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
 }
 
 a {

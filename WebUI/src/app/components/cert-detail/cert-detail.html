@@ -1,0 +1,89 @@
+@if (loading) {
+<p class="loading">Betöltés...</p>
+}
+
+@if (certType === 'root' && rootCert) {
+<h2>Root Tanúsítvány Részletek</h2>
+
+<div class="detail-card">
+    <table class="detail-table">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td class="mono">{{ rootCert.id }}</td>
+            </tr>
+            <tr>
+                <th>Subject</th>
+                <td>{{ rootCert.subjectName }}</td>
+            </tr>
+            <tr>
+                <th>Thumbprint</th>
+                <td class="mono">{{ rootCert.thumbprint }}</td>
+            </tr>
+            <tr>
+                <th>Érvényesség kezdete</th>
+                <td>{{ rootCert.notBefore | date:'yyyy-MM-dd HH:mm' }}</td>
+            </tr>
+            <tr>
+                <th>Lejárat</th>
+                <td>{{ rootCert.notAfter | date:'yyyy-MM-dd HH:mm' }}</td>
+            </tr>
+            <tr>
+                <th>Létrehozva</th>
+                <td>{{ rootCert.createdAt | date:'yyyy-MM-dd HH:mm' }}</td>
+            </tr>
+            <tr>
+                <th>User tanúsítványok</th>
+                <td>
+                    <a [routerLink]="['/user-certs', rootCert.id]">{{ rootCert.userCertCount }} db</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<a routerLink="/" class="back-link">← Vissza a listához</a>
+}
+
+@if (certType === 'user' && userCert) {
+<h2>User Tanúsítvány Részletek</h2>
+
+<div class="detail-card">
+    <table class="detail-table">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td class="mono">{{ userCert.id }}</td>
+            </tr>
+            <tr>
+                <th>Subject</th>
+                <td>{{ userCert.subjectName }}</td>
+            </tr>
+            <tr>
+                <th>Root Cert ID</th>
+                <td class="mono">{{ userCert.rootCertId }}</td>
+            </tr>
+            <tr>
+                <th>Thumbprint</th>
+                <td class="mono">{{ userCert.thumbprint }}</td>
+            </tr>
+            <tr>
+                <th>Érvényesség kezdete</th>
+                <td>{{ userCert.notBefore | date:'yyyy-MM-dd HH:mm' }}</td>
+            </tr>
+            <tr>
+                <th>Lejárat</th>
+                <td>{{ userCert.notAfter | date:'yyyy-MM-dd HH:mm' }}</td>
+            </tr>
+            <tr>
+                <th>Létrehozva</th>
+                <td>{{ userCert.createdAt | date:'yyyy-MM-dd HH:mm' }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<a routerLink="/user-certs" class="back-link">← Vissza a listához</a>
+}
+
+<app-messages />
