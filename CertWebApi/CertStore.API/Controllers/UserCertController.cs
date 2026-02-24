@@ -60,11 +60,17 @@ public class UserCertController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
+            _logger.LogError(ex, "InvalidOperationException a user tanúsítvány aláírásakor: {Message}", ex.Message);
             return BadRequest(ex.Message);
+        }
+        catch (System.Security.Cryptography.CryptographicException ex)
+        {
+            _logger.LogError(ex, "Kriptográfiai hiba az aláíráskor: {Message}", ex.Message);
+            return BadRequest($"Kriptográfiai hiba: {ex.Message}");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Hiba a user tanúsítvány aláírásakor");
+            _logger.LogError(ex, "Hiba a user tanúsítvány aláírásakor. Típus: {Type}, {Message}", ex.GetType().Name, ex.Message);
             return Problem(ex.Message);
         }
     }

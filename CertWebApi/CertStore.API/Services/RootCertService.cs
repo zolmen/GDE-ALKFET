@@ -65,7 +65,7 @@ public class RootCertService : IRootCertService
         var entity = new RootCertEntity
         {
             SubjectName = dto.SubjectName,
-            CertificateDataBase64 = Convert.ToBase64String(cert.Export(X509ContentType.Pfx)),
+            CertificateDataBase64 = Convert.ToBase64String(cert.Export(X509ContentType.Cert)),
             PrivateKeyDataBase64 = Convert.ToBase64String(rsa.ExportRSAPrivateKey()),
             NotBefore = cert.NotBefore,
             NotAfter = cert.NotAfter,
