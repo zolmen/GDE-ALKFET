@@ -42,8 +42,7 @@ public class UserCertService : IUserCertService
             ?? throw new InvalidOperationException("A megadott root tanúsítvány nem található.");
 
         var rootCertBytes = Convert.FromBase64String(rootCert.CertificateDataBase64);
-        using var caCert = X509CertificateLoader.LoadPkcs12(rootCertBytes, null,
-            X509KeyStorageFlags.Exportable);
+        using var caCert = X509CertificateLoader.LoadCertificate(rootCertBytes);
 
         var privateKeyBytes = Convert.FromBase64String(rootCert.PrivateKeyDataBase64);
         using var caRsa = RSA.Create();
@@ -62,8 +61,11 @@ public class UserCertService : IUserCertService
         var notBefore = DateTimeOffset.UtcNow;
         var notAfter = notBefore.AddDays(dto.ValidityDays);
 
+        var generator = X509SignatureGenerator.CreateForRSA(caRsa, RSASignaturePadding.Pkcs1);
+
         var signedCert = csr.Create(
-            caWithKey,
+            caCert.SubjectName,
+            generator,
             notBefore,
             notAfter,
             serialNumber);

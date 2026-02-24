@@ -68,10 +68,12 @@ export class UserCertsComponent implements OnInit {
             const file = input.files[0];
             const reader = new FileReader();
             reader.onload = () => {
-                this.csrBase64 = btoa(reader.result as string);
+                const result = reader.result as string;
+                const base64String = result.split(',')[1] || result;
+                this.csrBase64 = base64String;
                 this.cdr.detectChanges();
             };
-            reader.readAsText(file);
+            reader.readAsDataURL(file);
         }
     }
 
