@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "cert-store-mcp": {
+      "url": "http://localhost:5181/mcp",
+      "type": "streamable-http"
+    }
+  }
+}
