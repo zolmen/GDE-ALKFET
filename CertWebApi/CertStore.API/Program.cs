@@ -42,5 +42,5 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAnyOrigin");
 app.MapControllers();
 app.MapMcp("/mcp");
-
+   
 await app.RunAsync();
