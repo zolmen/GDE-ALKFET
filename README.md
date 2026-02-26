@@ -1,7 +1,3 @@
-Alkalmazás publikus elérése:
-
-https://karpatilabor.com/
-
 -------------------------------------------------
 
 X.509 Tanúsítványkezelő Alkalmazás MCP Integrációval:
