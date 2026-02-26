@@ -63,3 +63,86 @@ nav a {
     margin: 0 auto;
     padding: 1.5rem 2rem;
 }
+
+@media (max-width: 768px) {
+    .app-header {
+        padding: 0.5rem 1rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.75rem;
+        height: auto;
+        padding: 0.5rem 0;
+    }
+
+    .logo {
+        white-space: nowrap;
+    }
+
+    nav {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    nav a {
+        flex: 1 1 auto;
+        text-align: center;
+        white-space: nowrap;
+        padding: 0.5rem;
+    }
+
+    .app-main {
+        padding: 1rem;
+    }
+
+    .hedgehog-container {
+        width: 100%;
+        min-height: 40px;
+        margin: 0;
+    }
+}
+
+.hedgehog-container {
+    flex: 1;
+    position: relative;
+    height: 100%;
+    margin: 0 1rem;
+    overflow: hidden;
+    pointer-events: none;
+    min-height: 40px;
+}
+
+.running-hedgehog {
+    position: absolute;
+    font-size: 1.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: runHedgehog 10s linear infinite alternate;
+    will-change: transform, left;
+}
+
+@keyframes runHedgehog {
+    0% {
+        left: -10%;
+        transform: translateY(-50%) scaleX(1);
+    }
+
+    49.9% {
+        left: 110%;
+        transform: translateY(-50%) scaleX(1);
+    }
+
+    50% {
+        left: 110%;
+        transform: translateY(-50%) scaleX(-1);
+    }
+
+    100% {
+        left: -10%;
+        transform: translateY(-50%) scaleX(-1);
+    }
+}
