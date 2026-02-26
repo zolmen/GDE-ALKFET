@@ -1,3 +1,9 @@
+Alkalmazás publikus elérése:
+
+https://karpatilabor.com/
+
+-------------------------------------------------
+
 X.509 Tanúsítványkezelő Alkalmazás MCP Integrációval:
 
 Ez a projekt egy mikroszolgáltatás alapú, X.509 tanúsítványkezelő alkalmazás (Root CA és Felhasználói CSR aláírás). .NET 9 Web API backendből és egy Angular 19 frontendből áll. 
