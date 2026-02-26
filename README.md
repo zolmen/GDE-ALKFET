@@ -1,11 +1,11 @@
-# X.509 Tanúsítványkezelő Alkalmazás — MCP Integrációval
+# X.509 Tanúsítványkezelő Alkalmazás - MCP Integrációval
 
 > Mikroszolgáltatás alapú, X.509 tanúsítványkezelő alkalmazás (Root CA és Felhasználói CSR aláírás).  
 > **.NET 9 Web API** backend és **Angular 19** frontend.
 
 ---
 
-## Alkalmazás Architektúrája
+## Alkalmazás architektúrája
 
 A projekt három fő Backend rétegre és egy Frontend Single Page Applicationre oszlik:
 
@@ -18,7 +18,7 @@ A projekt három fő Backend rétegre és egy Frontend Single Page Applicationre
 
 ---
 
-## Lokális Fejlesztés és Futtatás
+## Lokális fejlesztés és futtatás
 
 Az alkalmazás futtatásához **`NET 9 SDK`**, **`Node.js`**, és **`Docker`** (MongoDB-hez) szükséges.
 
