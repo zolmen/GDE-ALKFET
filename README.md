@@ -22,7 +22,7 @@ A projekt három fő Backend rétegre és egy Frontend Single Page Applicationre
 
 Az alkalmazás futtatásához **`NET 9 SDK`**, **`Node.js`**, és **`Docker`** (MongoDB-hez) szükséges.
 
-### 1️⃣ MongoDB elindítása
+### 1. MongoDB elindítása
 
 A backend egy MongoDB adatbázist igényel. Docker segítségével azonnal elindítható:
 
@@ -30,17 +30,17 @@ A backend egy MongoDB adatbázist igényel. Docker segítségével azonnal elind
 docker run -d -p 27017:27017 --name cert-mongo mongo:latest
 ```
 
-### 2️⃣ Backend API indítása
+### 2. Backend API indítása
 
 ```bash
 cd CertWebApi/CertStore.API
 dotnet run
 ```
 
-> 📖 A REST API Swagger dokumentációja böngészőből is elérhető fejlesztői módban:  
+> A REST API Swagger dokumentációja böngészőből is elérhető fejlesztői módban:  
 > `http://localhost:sajatPort/swagger`
 
-### 3️⃣ Angular WebUI indítása
+### 3. Angular WebUI indítása
 
 ```bash
 cd WebUI
@@ -248,5 +248,15 @@ Az automatikus deployment utolsó lépése. Ha a fejlesztők push-olnak és a Gi
 ### Teljes Deployment Lánc
 
 ```
-Fejlesztők git push -> GitHub Actions (Docker build) -> ghcr.io (Container Registry) -> ArgoCD Image Updater (digest poll, ~2 perc) -> AKS pod frissítés -> HTTPS-en elérhető az új verzió
+Fejlesztők git push
+       ↓
+GitHub Actions (Docker build)
+       ↓
+ghcr.io (Container Registry)
+       ↓
+ArgoCD Image Updater (digest poll, ~2 perc)
+       ↓
+AKS pod frissítés
+       ↓
+HTTPS-en elérhető az új verzió
 ```
