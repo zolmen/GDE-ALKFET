@@ -3,8 +3,8 @@
 <div class="form-group">
     <input type="text" placeholder="Subject Name (pl. MyRootCA)" [(ngModel)]="newSubjectName" />
     <input type="number" placeholder="Érvényesség (nap)" [(ngModel)]="newValidityDays" />
-    <button class="btn-primary" (click)="createRootCert()" [disabled]="!newSubjectName.trim()">
-        Létrehozás
+    <button class="btn-primary" (click)="createRootCert()" [disabled]="!newSubjectName.trim() || isCreating">
+        {{ isCreating ? 'Létrehozás folyamatban...' : 'Létrehozás' }}
     </button>
 </div>
 

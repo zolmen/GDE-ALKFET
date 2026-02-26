@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, SlicePipe } from '@angular/common';
@@ -21,11 +21,13 @@ export class UserCertsComponent implements OnInit {
     csrBase64 = '';
     validityDays = 365;
     filterRootCertId: string | null = null;
+    isCreating = false;
 
     constructor(
         private certService: CertService,
         private messageService: MessageService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private cdr: ChangeDetectorRef
     ) { }
 
     ngOnInit(): void {
@@ -49,8 +51,14 @@ export class UserCertsComponent implements OnInit {
     loadUserCerts(): void {
         const rootId = this.filterRootCertId ?? undefined;
         this.certService.getUserCerts(rootId).subscribe({
-            next: certs => this.userCerts = certs,
-            error: err => this.messageService.add(err)
+            next: certs => {
+                this.userCerts = certs;
+                this.cdr.detectChanges();
+            },
+            error: err => {
+                this.messageService.add(err);
+                this.cdr.detectChanges();
+            }
         });
     }
 
@@ -60,14 +68,20 @@ export class UserCertsComponent implements OnInit {
             const file = input.files[0];
             const reader = new FileReader();
             reader.onload = () => {
-                this.csrBase64 = btoa(reader.result as string);
+                const result = reader.result as string;
+                const base64String = result.split(',')[1] || result;
+                this.csrBase64 = base64String;
+                this.cdr.detectChanges();
             };
-            reader.readAsText(file);
+            reader.readAsDataURL(file);
         }
     }
 
     signCert(): void {
-        if (!this.selectedRootCertId || !this.csrBase64) return;
+        if (!this.selectedRootCertId || !this.csrBase64 || this.isCreating) return;
+
+        this.isCreating = true;
+        this.cdr.detectChanges();
 
         this.certService.signUserCert({
             rootCertId: this.selectedRootCertId,
@@ -76,9 +90,14 @@ export class UserCertsComponent implements OnInit {
         }).subscribe({
             next: () => {
                 this.csrBase64 = '';
+                this.isCreating = false;
                 this.loadUserCerts();
             },
-            error: err => this.messageService.add(err)
+            error: err => {
+                this.messageService.add(err);
+                this.isCreating = false;
+                this.cdr.detectChanges();
+            }
         });
     }
 
