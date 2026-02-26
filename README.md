@@ -117,7 +117,7 @@ A projekt az általam korábban már meglévő Microsoft 365 felhő infrastrukt�
 
 ---
 
-### Azure Erőforrások
+### Azure erőforrások
 
 Jelen esetben 4 db resource group-ra volt szükség cost-center tag-ekkel:
 
@@ -128,7 +128,7 @@ az group create --name rg-karpatilabor-data    --location westeurope --tags cost
 az group create --name rg-karpatilabor-shared  --location westeurope --tags cost-center=shared
 ```
 
-**Virtual Network:**
+**Virtuális hálózat (vNet):**
 
 ```bash
 az network vnet create \
