@@ -104,9 +104,9 @@ A projekt az általam korábban már meglévő Microsoft 365 felhő infrastrukt�
 
 **Tenant beállítás:**
 
-1. M365 Business Premium aktiválás (`admin.microsoft.com`)
+1. M365 Business Premium licenc (`admin.microsoft.com`)
 2. Domain cím verifikálás TXT rekorddal a hoszting szolgáltató cPanel-ben
-3. Entra ID P1 (benne a licencben) identitáskezelés, MFA, Conditional Access
+3. Entra ID P1 (benne a licencben) identitáskezelés, MFA, Conditional Access (Egyénileg definiálható védelmi funkciókra volt szükség!)
 4. Azure Pay-As-You-Go előfizetés létrehozása (`portal.azure.com`)
 
 **Conditional Access szabályok:**
@@ -156,7 +156,7 @@ az aks create \
   --generate-ssh-keys
 ```
 
-> **Megjegyzés:** A `Standard_B2s_v2` VM SKU-hoz kvóta emelést kellett kérvényezni az Azure Portal-on (0 → 4 vCPU).
+> **Megjegyzés:** A `Standard_B2s_v2` VM SKU-hoz kvóta emelést kellett kérvényezni az Azure Portal-on (0 -> 4 vCPU).
 
 **Csatlakozás a clusterhez:**
 
@@ -194,7 +194,7 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.17.1/cert-manager.yaml
 ```
 
-- Public IP: `<TITKOS>` (Azure Load Balancer)
+- Public IP: `<PUBLIC IP ADDRESS>` (Azure Load Balancer)
 - Let's Encrypt tanúsítvány, ACME
 - ClusterIssuer: `letsencrypt-prod`
 
@@ -230,7 +230,7 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 Az ArgoCD figyeli a GitHub repo `k8s/` mappáját (Kustomize source) és automatikusan szinkronizálja az AKS cluster állapotát:
 
 - **Auto-sync:** ON
-- **Dashboard:** `kubectl port-forward svc/argocd-server -n argocd 8080:443` → `https://localhost:8080`
+- **Dashboard:** `kubectl port-forward svc/argocd-server -n argocd 8080:443` -> `https://localhost:8080`
 
 > Biztonsági okokból nincs publikálva a nagyvilágba.
 
@@ -240,8 +240,6 @@ Az ArgoCD figyeli a GitHub repo `k8s/` mappáját (Kustomize source) és automat
 
 Az automatikus deployment utolsó lépése. Ha a fejlesztők push-olnak és a GitHub Actions új Docker image-et készít, akkor az Image Updater **2 percen belül** észleli a változást és frissíti a pod-okat.
 
-**Konfiguráció az ArgoCD Application-ön:**
-
 - Update strategy: `digest` (figyeli a `:latest` tag mögötti SHA256 változást)
 - Registry auth: GitHub PAT token (`read:packages` scope)
 
@@ -250,15 +248,5 @@ Az automatikus deployment utolsó lépése. Ha a fejlesztők push-olnak és a Gi
 ### Teljes Deployment Lánc
 
 ```
-Fejlesztők git push
-       ↓
-GitHub Actions (Docker build)
-       ↓
-ghcr.io (Container Registry)
-       ↓
-ArgoCD Image Updater (digest poll, ~2 perc)
-       ↓
-AKS pod frissítés
-       ↓
-HTTPS-en elérhető az új verzió
+Fejlesztők git push -> GitHub Actions (Docker build) -> ghcr.io (Container Registry) -> ArgoCD Image Updater (digest poll, ~2 perc) -> AKS pod frissítés -> HTTPS-en elérhető az új verzió
 ```
