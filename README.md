@@ -12,9 +12,9 @@ Ez a projekt egy mikroszolgáltatás alapú, X.509 tanúsítványkezelő alkalma
 
 A projekt három fő Backend rétegre és egy Frontend Single Page Applicationre oszlik:
 1. CertStore.Domain:Üzleti entitások, és adatátviteli objektumok
-2. CertStore.Infrastructure:** MongoDB alapú persistence réteg, Generikus Repository-k, UnitOfWork.
-3. CertStore.API:** REST API Controllerek, Üzleti Service-ek (BouncyCastle alapú X.509 generálás), és az MCP Server (Tool-ok).
-4. WebUI (Angular):** Kliensalkalmazás a tanúsítványok weben keresztüli letöltéséhez, menedzseléséhez és CSR fájlok beküldéséhez.
+2. CertStore.Infrastructure: MongoDB alapú persistence réteg, Generikus Repository-k, UnitOfWork.
+3. CertStore.API: REST API Controllerek, Üzleti Service-ek (BouncyCastle alapú X.509 generálás), és az MCP Server (Tool-ok).
+4. WebUI (Angular): Kliensalkalmazás a tanúsítványok weben keresztüli letöltéséhez, menedzseléséhez és CSR fájlok beküldéséhez.
 
 ---
 
@@ -68,7 +68,7 @@ A Claude Code a Streamable HTTP protokollt használja, közvetlen HTTP kapcsolat
 
 ---
 
-## ☁️ CI/CD és Kubernetes (Élesítés)
+## CI/CD és Kubernetes (Élesítés)
 
 A szoftver tartalmaz összeállított DevOps konfigurációkat egy felhős (K8s) élesítésez.
 
