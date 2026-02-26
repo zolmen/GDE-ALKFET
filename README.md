@@ -64,22 +64,94 @@ A Claude Code a Streamable HTTP protokollt használja, közvetlen HTTP kapcsolat
 
 ---
 
-## CI/CD és Kubernetes (Élesítés)
+## Microsoft infrastruktúra, CI/CD és Kubernetes (Élesítés)
 
-A szoftver tartalmaz összeállított DevOps konfigurációkat egy felhős (K8s) élesítésez.
+Az infrastruktúra megteremtése és üzemeltetése a projekt teljes ideje alatt. Microsoft 365 és Azure Free Tier felhős környezet kialakítása, Kubernetes cluster telepítés, CI/CD pipeline, adatbázis konfiguráció és GitOps automatizálása.
 
-### Github Actions Pipiline
-A projekt tartalmazza a `.github/workflows/docker-image.yml` állományt. Amikor felküldöd a kódot a GitHub `master` branch-re, a folyamat automatikusan lefut:
-1. Felépíti a C# backend Docker image-t és felölti a Github Container Registrybe (`ghcr.io/te-github-neved/gde-backend`).
-2. Felépíti az Angular Nginx Docker image-t és feltölti a regisztrációba.
+Előfeltételek (lokális gépen)
+A munkához a következő szoftverekre van szükség:
 
-### Kubernetes Telepítés (K8s)
-Miután a Docker image-ek a regisztrációdban (GHCR) vannak, módosítsd a `k8s/vackend.yaml` és `k8s/frontend.yaml` fájlok `image:` sorát a saját Github Registry útvonaladra.
+1. Azure CLI (az) — Azure erőforrások kezelése parancssorból
+2. kubectl — Kubernetes cluster vezérlése
+3. Helm — Kubernetes csomagkezelő (NGINX Ingress, cert-manager)
+4. Git — Verziókezelés, GitHub repo kezelése
 
-Ezután a három szolgáltatás a következő parancsokkal indítható a K8s Clusteredben:
-```bash
-kubectl apply -f k8s/mongo.yaml
-kubectl apply -f k8s/backend.yaml
-kubectl apply -f k8s/frontend.yaml
-```
-*A K8s Config biztosítja, hogy a Backend `mongodb://mongo:27017` connection string segítségével eléri az elszigetelt mongoDb POD-ot, a backend és a frontend load ballanszerek pedig felélednek az internetre.*
+Microsoft 365 és Azure Platform
+A projekt az általam korábban már meglévő Microsoft 365 felhő infrastruktúrára és egy regisztrált domain-re épült.
+Tenant beállítás:
+
+1. M365 Business Premium aktiválás (admin.microsoft.com)
+2. Domain cím verifikálás TXT rekorddal a hoszting szolgáltató cPanel-ben
+3. Entra ID P1 (benne a licencben) identitáskezelés, MFA, Conditional Access
+4. Azure Pay-As-You-Go előfizetés létrehozása (portal.azure.com)
+
+Conditional Access szabályok
+- Block Non-EU Countries (27 EU tagállam Named Location)
+- MFA for all users / admins / Azure Management
+- Block legacy authentication
+
+Azure Erőforrások
+Jelen esetben 4db resource group-ra volt szükség cost-center tag-ekkel:
+az group create --name rg-karpatilabor-network --location westeurope --tags cost-center=network
+az group create --name rg-karpatilabor-aks     --location westeurope --tags cost-center=compute
+az group create --name rg-karpatilabor-data    --location westeurope --tags cost-center=database
+az group create --name rg-karpatilabor-shared  --location westeurope --tags cost-center=shared
+
+Virtual Network:
+az network vnet create --name vnet-karpatilabor-weu --resource-group rg-karpatilabor-network --address-prefix 192.168.0.1/24 --subnet-name snet-aks --subnet-prefix 192.168.0.1/24
+
+AKS Cluster (Kubernetes)
+az aks create --name aks-karpatilabor --resource-group rg-karpatilabor-aks \
+  --node-count 1 --node-vm-size Standard_B2s_v2 --tier free \
+  --kubernetes-version 1.33.6 --network-plugin azure \
+  --vnet-subnet-id <SUBNET_ID> --generate-ssh-keys
+Megjegyzés: A Standard_B2s_v2 VM SKU-hoz kvóta emelést kellett kérvényezni az Azure Portal-on (0 → 4 vCPU).
+
+Csatlakozás a clusterhez:
+az aks get-credentials --resource-group rg-karpatilabor-aks --name aks-karpatilabor
+Namespace-ek: karpatilabor, argocd, ingress-nginx, cert-manager
+
+DocumentDB (MongoDB)
+- Free Tier, 32 GB, MongoDB 8.0 kompatibilis
+- Régió: East US (Free Tier csak itt érhető el!)
+- Firewall: AllowAzureServices + 3 fejlesztő IP cím hozzáadva
+
+A Kubernetes-ben Secret tárolja a connection string-et (URL-encoded jelszóval):
+kubectl create secret generic mongodb-secret --namespace karpatilabor \
+  --from-literal=connection-string="mongodb+srv://dbadmin:<URL_ENCODED_PW>@db-karpatilabor.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000"
+
+NGINX Ingress Controller + Let's Encrypt
+helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.17.1/cert-manager.yaml
+
+- Public IP: <TITKOS> (Azure Load Balancer)
+- Let's Encrypt tanúsítvány, ACME
+- ClusterIssuer: letsencrypt-prod
+
+DNS (Hosting cPanel):
+
+cegesdomain.com -> A -> IPV4.ADDRESS.FORM.
+
+CI/CD Pipeline (GitHub Actions)
+A GitHub repository: zolmen/GDE-ALKFET (Public)
+Két GitHub Actions workflow automatizálja a Docker image build-et:
+build-backend.yaml -> ghcr.io/zolmen/gde-alkfet/backend:latest
+build-frontend.yaml -> ghcr.io/zolmen/gde-alkfet/frontend:latest
+push a main branch-re → GitHub Actions build → Docker image push a GitHub Container Registry-be (ghcr.io)
+
+ArgoCD (GitOps)
+
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+Az ArgoCD figyeli a GitHub repo k8s/ mappáját (Kustomize source) és automatikusan szinkronizálja az AKS cluster állapotát:
+- Auto-sync: ON
+- Dashboard: kubectl port-forward svc/argocd-server -n argocd 8080:443 → https://localhost:8080 (Biztonsági okokból nincs publikálva a nagyvilágba)
+
+ArgoCD Image Updater
+Az automatikus deployment utolsó lépése. Ha a fejlesztők push-olnak és a GitHub Actions új Docker image-et készít, akkor az Image Updater 2 percen belül észleli a változást és frissíti a pod-okat.
+Konfiguráció az ArgoCD Application-ön:
+- Update strategy: digest (figyeli a :latest tag mögötti SHA256 változást)
+- Registry auth: GitHub PAT token (read:packages scope)
+
+
+Teljes deployment lánc: Fejlesztők git push -> GitHub Actions (Docker build) -> ghcr.io → ArgoCD Image Updater (digest poll, 2 perc) -> AKS pod frissítés -> HTTPS-en elérhető az új verzió.
