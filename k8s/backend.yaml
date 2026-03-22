@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: ghcr.io/zolmen/gde-alkfet/backend:a4aa10aeda2aca083c589429f11bb8114d5b80f1
+        image: ghcr.io/zolmen/gde-alkfet/backend:bdd0447b18192572e8342e07b4394dff926ecef2
         ports:
         - containerPort: 8080
         env:
