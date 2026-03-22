@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: ghcr.io/zolmen/gde-alkfet/frontend:latest
+        image: ghcr.io/zolmen/gde-alkfet/frontend:0f08e580241e25428424ea2633969454f507a019
         ports:
         - containerPort: 80
         resources:
